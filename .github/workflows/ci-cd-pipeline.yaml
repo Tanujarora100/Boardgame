@@ -125,7 +125,7 @@ jobs:
       uses: sonatype-nexus-community/nexus-repo-github-action@master
       with:
         serverUrl: http://20.55.106.40:8085
-        username: ${{ env.NEXUS_USERNAME }}
+        username: ${{ secrets.NEXUS_USERNAME }}
         password: ${{ secrets.NEXUS_PASSWORD }}
         format: maven2
         repository: maven-releases
