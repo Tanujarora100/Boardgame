@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline for Java Application
 
 on:
   push:
@@ -29,7 +29,9 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
     - name: OWASP Dependency Check
       uses: dependency-check/Dependency-Check_Action@main
-      id: Depcheck
+      id: dependency-check
+      env:
+        JAVA_HOME: /opt/jdk
       with:
         project: 'database_service_project'
         path: '.'
