@@ -59,11 +59,13 @@ jobs:
         key: ${{ runner.os }}-sonar
         restore-keys: ${{ runner.os }}-sonar
 
-  docker-build-and-scan:
+  docker-build-and-trivy Scan:
     needs: sonarqube-analysis
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
 
     - name: Download JAR
       uses: actions/download-artifact@v3
@@ -72,7 +74,11 @@ jobs:
         path: target
 
     - name: Build Docker image
-      run: docker build -t boardgame:latest .
+      uses: docker/build-push-action
+      with:
+        context: .
+        push: false
+        tags: boardgame:latest
 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
@@ -85,8 +91,20 @@ jobs:
       uses: github/codeql-action/upload-sarif@v2
       with:
         sarif_file: "trivy-results.sarif"
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Build and Push to Docker Image
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        push: true
+        tags: ${{secrets.DOCKER_USERNAME}}/boardgame:latest
+
   publish_to_nexus:
-    needs: docker-build-and-scan
+    needs: docker-build-and-trivy Scan
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
