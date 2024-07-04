@@ -87,7 +87,7 @@ jobs:
       with:
         context: .
         push: true
-        tags: boardgame/${{github.sha}} .
+        tags: ${{ secrets.DOCKER_USERNAME }}/board-gameboard/boardgame/${{github.sha}} .
     - name: Publish to Nexus
       uses: sonatype-nexus-community/nexus-repo-github-action@master
       with:
