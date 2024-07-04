@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [main]
 
-env:
-  SONAR_HOST_URL: "http://4.236.181.165:9000"
-  NEXUS_URL: "http://20.55.106.40:8085"
 
 jobs:
   build-and-test:
@@ -109,4 +106,4 @@ jobs:
         repository: maven-releases
         coordinates: groupId=com.javaproject artifactId=database_service_project version=0.0.4
         assets: extension=jar
-        filename: ./target/app-0.0.4.jar
+        filename: ./target/database_service_project-0.0.4.jar
