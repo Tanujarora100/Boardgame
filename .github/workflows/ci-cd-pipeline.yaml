@@ -59,17 +59,12 @@ jobs:
         name: database_jar
         path: target
     - name: Build Docker image
-      uses: docker/build-push-action@v3
-      with:
-        context: .
-        push: false
-        tags: boardgame:latest
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+      run: |
+        docker build -t boardgame/${{github.sha}} .
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: boardgame:latest
+        image-ref: 'boardgame/${{github.sha}}'
         format: "sarif"
         output: "trivy-results.sarif"
     - name: Upload Trivy scan results
@@ -92,7 +87,7 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{secrets.DOCKER_USERNAME}}/$boardgame:latest
+        tags: boardgame/${{github.sha}} .
     - name: Publish to Nexus
       uses: sonatype-nexus-community/nexus-repo-github-action@master
       with:
