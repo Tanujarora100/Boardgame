@@ -37,10 +37,12 @@ jobs:
         path: '.'
         format: 'HTML'
         out: 'reports'
+        args: >
+          --failOnCVSS 7 --enableRetired
     - name: Upload Test results
       uses: actions/upload-artifact@master
       with:
-        name: OWASP Dependency Check Report/${{github.sha}}
+        name: OWASP Dependency Check Report
         path: ${{github.workspace}}/reports
 
     - name: Send the OWASP Dependency Check Report
@@ -55,7 +57,7 @@ jobs:
         to: ${{env.EMAIL_TO}}
         from: ${{secrets.EMAIL_FROM}}
         body_format: html
-        attachments: reports/OWASP Dependency Check Report/${{github.sha}}
+        attachments: reports/OWASP Dependency Check Report
     - name: Upload JAR
       uses: actions/upload-artifact@v3
       with:
