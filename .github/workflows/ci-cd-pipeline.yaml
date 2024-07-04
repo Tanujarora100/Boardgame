@@ -118,8 +118,8 @@ jobs:
         path: target
     - name: Push to Docker Hub
       run: |
-        docker build -t boardgame/${{github.sha}} .
-        docker push boardgame/${{github.sha}}
+        docker build -t ${{secrets.DOCKER_USERNAME}}/boardgame/${{github.sha}} .
+        docker push ${{secrets.DOCKER_USERNAME}}/boardgame/${{github.sha}}
     - name: Publish to Nexus
       uses: sonatype-nexus-community/nexus-repo-github-action@master
       with:
