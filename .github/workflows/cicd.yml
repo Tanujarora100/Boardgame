@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   checkout-job:
-    runs-on: [self-hosted, github-runner]
+    runs-on: [self-hosted]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
