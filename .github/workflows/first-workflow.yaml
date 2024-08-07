@@ -6,7 +6,7 @@ jobs:
         steps:
             - name: List all files in a directory
               run: |
-                  ls - ltr
+                  ls -ltr
                   pwd
                   find . -type f
                   find . -type d
