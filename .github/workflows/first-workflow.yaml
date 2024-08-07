@@ -1,36 +1,16 @@
-name: First Workflow 
+name: Workflow Commands
 on: [push]
-jobs:
-    run-shell-commands:
+jobs: 
+    testing-wf-commands:
         runs-on: ubuntu-latest
         steps:
-            - name: Echo String
-              run: echo "Hello, World!"
-            - name: check the OS 
-              run: |
-                node -v 
-                npm -v 
-                git -v
-                echo "Operating System: $(uname -s)"
-    parallel-job-macos:
-        runs-on: macos-latest
-        steps:
-            - name: Install dependencies
-              run: |
-                sw_vers
-                brew install python
-                brew install pipenv
-                pipenv install
-    dependant-job:
-        needs: [run-shell-commands, parallel-job-macos]
-        runs-on: ubuntu-latest
-        steps:
-            - name: Install Python 
-              run: |
-                python3 --version
-                pip install --upgrade pip
-                pip install requests beautifulsoup4
-                echo $(uname -s)
-                echo "Operating System: $(uname -s)"
-                echo "Dependant Job Completed"
+            - name: Setting an error message
+              run: echo "::error::Missing Semicolon"
+            - name: Print branch name
+              run: echo "Branch:${GITHUB_REF#refs/heads/}"
+            
+            - name: Print SHA
+              run: echo "SHA:${GITHUB_SHA}"
         
+            - name: Print PR number
+              run: echo "PR:${GITHUB_EVENT_NUMBER}"
