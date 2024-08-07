@@ -1,26 +1,29 @@
-name: Workflow Commands
+name: directory and files
 on: [push]
 jobs: 
-    testing-wf-commands:
+    list_directory:
         runs-on: ubuntu-latest
-        env:
-            masked_env_variable: "this_is_a_secret"
         steps:
-            - name: Setting an error message
-              run: echo "::error::Missing Semicolon"
-            - name: Print branch name
-              run: echo "Branch:${GITHUB_REF#refs/heads/}"
-            
-            - name: Print SHA
-              run: echo "SHA:${GITHUB_SHA}"
-        
-            - name: Print PR number
-              run: echo "PR:${GITHUB_EVENT_NUMBER}"
-            - name: Group logs
+            - name: List all files in a directory
               run: |
-                echo "::group::Grouped Logs"
-                echo "This is a group log"
-                echo "::endgroup::"
-            - name: bash-version
-              run: echo "::add-mask::$masked_env_variable"
-             
+                  ls - ltr
+                  pwd
+                  find . -type f
+                  find . -type d
+                  echo $GITHUB_REPOSITORY
+                  echo $GITHUB_WORKFLOW
+                  echo $GITHUB_SHA
+                  echo $GITHUB_ACTOR
+                  echo $GITHUB_WORKSPACE
+    list_directory_windows:
+        runs-on: windows-latest
+        steps:
+            - name: List all files in a directory
+              run: |
+                  ls 
+                  dir
+                  echo $GITHUB_REPOSITORY
+                  echo $GITHUB_WORKFLOW
+                  echo $GITHUB_SHA
+                  echo $GITHUB_ACTOR
+                  echo $GITHUB_WORKSPACE
