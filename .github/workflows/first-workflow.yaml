@@ -1,46 +1,14 @@
-name: Directory and Files
-
+name: using with command
 on: [push]
-
 jobs:
-  list_directory:
-    runs-on: ubuntu-latest
-    defaults:
-        run:
-            shell: bash
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: List all files in a directory
-        run: |
-          ls -ltr
-          pwd
-          find . -type f
-          find . -type d
-          echo $GITHUB_REPOSITORY
-          echo $GITHUB_WORKFLOW
-          echo $GITHUB_SHA
-          echo $GITHUB_ACTOR
-          echo $GITHUB_WORKSPACE
-
-  list_directory_windows:
-    runs-on: windows-latest
-    defaults:
-            run:
-                shell: pwsh
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: List all files in a directory
-        
-        run: |
-          Get-Location
-          dir
-          echo $env:GITHUB_REPOSITORY
-          echo $env:GITHUB_WORKFLOW
-          echo $env:GITHUB_SHA
-          echo $env:GITHUB_ACTOR
-          echo $env:GITHUB_WORKSPACE
-    needs: [list_directory]
+  simple-action:
+   runs-on: ubuntu-latest
+   steps:
+    - name: Simple JS Action 
+      id: hello-world-greet
+      uses: actions/hello-world-javascript-action@main
+      with:
+       who-to-greet: Tanuj
+    - name: Log Greeting time 
+      run : echo "${{steps.hello-world-greet.outputs.time}}"
+      
