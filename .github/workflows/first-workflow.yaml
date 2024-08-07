@@ -1,0 +1,14 @@
+name: First Workflow 
+on: [push]
+jobs:
+    run-shell-commands:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Echo String
+              run: echo "Hello, World!"
+            - name: check the OS 
+              run: |
+                node -v 
+                npm -v 
+                git -v
+                echo "Operating System: $(uname -s)"
