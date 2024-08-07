@@ -3,6 +3,8 @@ on: [push]
 jobs: 
     testing-wf-commands:
         runs-on: ubuntu-latest
+        env:
+                masked_env_variable: "this_is_a_secret"
         steps:
             - name: Setting an error message
               run: echo "::error::Missing Semicolon"
@@ -14,3 +16,11 @@ jobs:
         
             - name: Print PR number
               run: echo "PR:${GITHUB_EVENT_NUMBER}"
+            - name: Group logs
+              run: |
+                echo "::group::Grouped Logs"
+                echo "This is a group log"
+                echo "::endgroup::"
+            - name: mask a env variable
+              run: echo "::mask-env::${masked_env_variable}"
+             
