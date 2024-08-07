@@ -12,3 +12,25 @@ jobs:
                 npm -v 
                 git -v
                 echo "Operating System: $(uname -s)"
+    parallel-job-macos:
+        runs-on: macos-latest
+        steps:
+            - name: Install dependencies
+              run: |
+                sw_vers
+                brew install python
+                brew install pipenv
+                pipenv install
+    dependant-job:
+        needs: [run-shell-commands, parallel-job-macos]
+        runs-on: ubuntu-latest
+        steps:
+            - name: Install Python 
+              run: |
+                python3 --version
+                pip install --upgrade pip
+                pip install requests beautifulsoup4
+                echo $(uname -s)
+                echo "Operating System: $(uname -s)"
+                echo "Dependant Job Completed"
+        
