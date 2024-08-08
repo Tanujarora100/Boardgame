@@ -28,7 +28,10 @@ jobs:
         cache: maven
 
     - name: Build with Maven
-      run: mvn package --file pom.xml
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      run: mvn clean verify sonar:sonar -Dsonar.projectKey=boardgame -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
@@ -54,33 +57,6 @@ jobs:
         name: trivy_report
         path: trivy_report.html
 
-    - name: SonarQube Scan
-      uses: SonarSource/sonarcloud-github-action@v1.5
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      with:
-        args: >
-          -Dsonar.projectKey=boardgame
-          -Dsonar.sources=.
-          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-
-    - name: Install JQ
-      run: |
-        wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
-        chmod +x jq-linux64
-        sudo mv jq-linux64 /usr/bin/jq
-        export PATH=/usr/bin:$PATH
-
-    - name: Sonarqube Quality Gate Scan 
-      run: |
-        curl -s -u ${{ secrets.SONAR_TOKEN }} ${{ secrets.SONAR_HOST_URL }}/api/qualitygates/project_status?projectKey=boardgame > project_status.json
-        QUALITY_GATE_STATUS=$(jq -  r .projectStatus.status project_status.json)
-        if [ "$QUALITY_GATE_STATUS" != "OK" ]; then
-          echo "Quality Gate failed: $QUALITY_GATE_STATUS"
-          exit 1
-        fi
     - name: Setup QEMU
       uses: docker/setup-qemu-action@v2
     - name: setup docker buildx
@@ -121,5 +97,3 @@ jobs:
      - run: |
         kubectl apply -f kubernetes/deployment-service.yaml
         kubectl get svc -n boardgame
-
-          
