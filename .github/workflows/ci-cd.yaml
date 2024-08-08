@@ -116,12 +116,6 @@ jobs:
       if: github.event_name == 'push'
       run: docker push tanujarora27/boardgame:latest
 
-    - name: Notify Scan Success
-      if: success()
-      uses: some/notification-action@v1
-      with:
-        message: "Security scan succeeded for ${{ github.repository }} on ${{ github.ref }}"
-    
   deploy:
      needs: security_scan
      runs-on: [self-hosted]
@@ -136,14 +130,4 @@ jobs:
         kubectl apply -f kubernetes/deployment-service.yaml
         kubectl get svc -n boardgame
 
-     - name: Notify Deployment Success
-       if: success()
-       uses: some/notification-action@v1
-       with:
-         message: "Deployment succeeded for ${{ github.repository }} on ${{ github.ref }}"
-
-     - name: Notify Deployment Failure
-       if: failure()
-       uses: some/notification-action@v1
-       with:
-         message: "Deployment failed for ${{ github.repository }} on ${{ github.ref }}"
+     
