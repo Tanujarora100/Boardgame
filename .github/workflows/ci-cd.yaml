@@ -15,7 +15,7 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: [self-hosted, dev-runner]
 
     steps:
     - uses: actions/checkout@v4
@@ -38,7 +38,7 @@ jobs:
 
   security_scan:
     needs: build
-    runs-on: self-hosted
+    runs-on: [self-hosted, dev-runner]
 
     steps:
     - name: Check out repository
@@ -110,7 +110,7 @@ jobs:
     
   deploy:
      needs: security_scan
-     runs-on: self-hosted
+     runs-on: [self-hosted, dev-runner]
      steps:
      - name: Checkout repository
        uses: actions/checkout@v4
