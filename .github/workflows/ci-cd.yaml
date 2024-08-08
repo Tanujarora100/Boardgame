@@ -114,6 +114,8 @@ jobs:
      needs: security_scan
      runs-on: [self-hosted]
      steps:
+
+
      - name: Checkout repository
        uses: actions/checkout@v4
      - name: Deploy to kubernetes
@@ -121,6 +123,10 @@ jobs:
        with:
         base64-kube-config: ${{ secrets.KUBE_CONFIG_SECRET }}
      - run: |
+        kubectl cluster-info 
+        kubectl get nodes
+        kubectl get pods -n default
+        kubectl get deployments -n default
         kubectl apply -f kubernetes/deployment-service.yaml
         kubectl get svc -n boardgame
 
