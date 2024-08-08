@@ -15,7 +15,7 @@ on:
 
 jobs:
   build:
-    runs-on: [self-hosted]
+    runs-on: [self-hosted, dev-runner]
 
     steps:
     - uses: actions/checkout@v4
@@ -55,9 +55,15 @@ jobs:
         name: boardgame-artifact
         path: target/*.jar
 
+    - name: Notify Build Success
+      if: success()
+      uses: some/notification-action@v1
+      with:
+        message: "Build succeeded for ${{ github.repository }} on ${{ github.ref }}"
+
   security_scan:
     needs: build
-    runs-on: [self-hosted]
+    runs-on: [self-hosted, dev-runner]
 
     steps:
     - name: Check out repository
@@ -94,7 +100,7 @@ jobs:
         docker build -t tanujarora27/boardgame:latest .
 
     - name: Scan Docker Image 
-      run: trivy image --severity CRITICAL -f html -o results.html tanujarora27/boardgame:latest
+      run: trivy image --severity CRITICAL -f table -o results.html tanujarora27/boardgame:latest
     
     - name: Upload Scan Results
       uses: actions/upload-artifact@v3
@@ -105,6 +111,12 @@ jobs:
     - name: Push to Docker Hub
       if: github.event_name == 'push'
       run: docker push tanujarora27/boardgame:latest
+
+    - name: Notify Scan Success
+      if: success()
+      uses: some/notification-action@v1
+      with:
+        message: "Security scan succeeded for ${{ github.repository }} on ${{ github.ref }}"
     
   deploy:
      needs: security_scan
@@ -119,3 +131,15 @@ jobs:
      - run: |
         kubectl apply -f kubernetes/deployment-service.yaml
         kubectl get svc -n boardgame
+
+     - name: Notify Deployment Success
+       if: success()
+       uses: some/notification-action@v1
+       with:
+         message: "Deployment succeeded for ${{ github.repository }} on ${{ github.ref }}"
+
+     - name: Notify Deployment Failure
+       if: failure()
+       uses: some/notification-action@v1
+       with:
+         message: "Deployment failed for ${{ github.repository }} on ${{ github.ref }}"
