@@ -1,0 +1,56 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: boardgame-role
+  namespace: boardgame
+  labels:
+    app: boardgame
+    role: developers-role
+rules:
+- apiGroups: [""]
+  resources: ["*"]
+  verbs: ["get", "list", "watch", "create", "delete", "update", "patch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: boardgame-rolebinding
+  namespace: boardgame
+  labels:
+    app: boardgame
+    role: developers-role-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: boardgame-role
+subjects:
+- kind: ServiceAccount
+  name: github-actions-serviceaccount
+  namespace: boardgame
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: github-actions-serviceaccount
+  namespace: boardgame
+  labels:
+    app: boardgame
+
+---
+# Purpose and Usage
+# Service Account Authentication:
+
+# When a pod is associated with a service account, Kubernetes uses the Secret to store the token for the service account.
+# The token stored in this Secret can be used by the pod to authenticate to the Kubernetes API server, enabling it to perform actions as defined by the role and role bindings associated with the service account.
+# Automatic Generation:
+
+# When you create a Secret of type kubernetes.io/service-account-token with the annotation kubernetes.io/service-account.name, Kubernetes automatically populates the Secret with a token for the specified service account.
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/service-account-token
+metadata:
+  name: github-actions-secret
+  annotations:
+    kubernetes.io/service-account.name: github-actions-serviceaccount

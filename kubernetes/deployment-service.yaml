@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: boardgame-deployment
+  namespace: boardgame
+  labels:
+    app: boardgame
+spec:
+  selector:
+    matchLabels:
+      app: boardgame
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: boardgame
+    spec:
+      imagePullSecrets:
+      - name: docker-credentials
+      serviceAccountName: boardgame-service
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
+        capabilities:
+          drop:
+          - ALL
+        privileged: false
+      containers:
+      - name: boardgame
+        image: tanujarora27/boardgame:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "0.5"
+          limits:
+            memory: "1024Mi"
+            cpu: "1"
+      volumeClaimTemplates:
+      - metadata:
+          name: boardgame-data-volume
+        spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 2Gi
+            storageClassName: standard
+---
+apiVersion: v1 # Kubernetes API version
+kind: Service # Kubernetes resource kind we are creating
+metadata: # Metadata of the resource kind we are creating
+  name: boardgame-ssvc
+  namespace: boardgame
+  labels:
+    app: boardgame
+spec:
+  selector:
+    app: boardgame
+  ports:
+  - protocol: "TCP"
+    port: 8080
+    targetPort: 8080
+  type: LoadBalancer # type of the service.
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: docker-credentials
+  namespace: boardgame
+type: Opaque
+data:
+  DOCKER_HUB_PASSWORD: <base64-encoded-password>
+  DOCKER_HUB_USERNAME: <base64-encoded-username>
+
+
+---
