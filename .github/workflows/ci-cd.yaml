@@ -55,12 +55,6 @@ jobs:
         name: boardgame-artifact
         path: target/*.jar
 
-    - name: Notify Build Success
-      if: success()
-      uses: some/notification-action@v1
-      with:
-        message: "Build succeeded for ${{ github.repository }} on ${{ github.ref }}"
-
   security_scan:
     needs: build
     runs-on: [self-hosted]
