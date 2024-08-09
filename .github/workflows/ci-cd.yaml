@@ -149,8 +149,26 @@ jobs:
       with:
         version: 'v1.28.1' 
     
+  jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'v1.28.1'
+
+    - name: Set up Kubeconfig
+      run: |
+        echo "${{ secrets.KUBE_CONFIG_SECRET }}" > $HOME/.kube/config
+
     - name: Deploy to GKE
       run: |
         kubectl apply -f kubernetes/deployment-service.yaml
         sleep 120
         kubectl get svc -n boardgame
+
