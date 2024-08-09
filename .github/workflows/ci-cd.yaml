@@ -94,7 +94,7 @@ jobs:
         docker build -t tanujarora27/boardgame:latest .
 
     - name: Scan Docker Image 
-      run: trivy image --severity CRITICAL -f html -o results.html tanujarora27/boardgame:latest
+      run: trivy image --severity CRITICAL -f table -o results.html tanujarora27/boardgame:latest
     
     - name: Upload Scan Results
       uses: actions/upload-artifact@v3
