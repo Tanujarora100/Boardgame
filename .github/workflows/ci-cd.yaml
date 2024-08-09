@@ -84,11 +84,9 @@ jobs:
     runs-on: [self-hosted]
 
     steps:
-    - name: Run TruffleHog Scan
+    - name: trufflehog-actions-scan
+      uses: edplato/trufflehog-actions-scan@master
       continue-on-error: true 
-      run: |
-        pwd
-        trufflehog3 --no-history --format json --output report.json .
 
     - name: Upload TruffleHog Report
       continue-on-error: true 
@@ -149,8 +147,9 @@ jobs:
       with:
         base64-kube-config: ${{ secrets.KUBE_CONFIG_SECRET }}
     - run: |
-       kubectl apply -f kubernetes/deployment-service.yaml -n boardgame
+       kubectl apply -f kubernetes/deployment-service.yaml -n boardgame --validate=false
        kubectl get svc -n boardgame
        kubectl get deployment -n boardgame
+
        
 
