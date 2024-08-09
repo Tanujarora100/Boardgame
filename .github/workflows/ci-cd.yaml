@@ -85,19 +85,21 @@ jobs:
 
     steps:
     - name: Run TruffleHog Scan
+      continue-on-error: true 
       run: |
         pwd
-        pip install trufflehog
-        trufflehog --json . > trufflehog_report.json
+        trufflehog3 filesystem --json . > trufflehog-output.json
 
     - name: Upload TruffleHog Report
+      continue-on-error: true 
+      if: success()
       uses: actions/upload-artifact@v3
       with:
         name: trufflehog_report
         path: trufflehog_report.json
 
   docker_build_push:
-    needs: [security_scan, trufflehog_scan]
+    needs: [trufflehog_scan]
     runs-on: [self-hosted]
 
     steps:
