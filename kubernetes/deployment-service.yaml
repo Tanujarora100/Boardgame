@@ -71,8 +71,8 @@ metadata:
   namespace: boardgame
 type: Opaque
 data:
-  DOCKER_HUB_PASSWORD: <base64-encoded-password>
-  DOCKER_HUB_USERNAME: <base64-encoded-username>
+  DOCKER_HUB_PASSWORD: cG9nb18yMDI0Cg==
+  DOCKER_HUB_USERNAME: dGFudWpneW1AZ21haWwuY29tCg==
 
 
 ---
