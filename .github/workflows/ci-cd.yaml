@@ -170,5 +170,7 @@ jobs:
       run: |
         kubectl apply -f kubernetes/deployment-service.yaml
         sleep 120
+        kubectl get pods -n boardgame
+        kubectl get deployments -n boardgame
         kubectl get svc -n boardgame
 
