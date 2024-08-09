@@ -88,7 +88,7 @@ jobs:
       continue-on-error: true 
       run: |
         pwd
-        trufflehog3 filesystem --json . > trufflehog-output.json
+        trufflehog3 filesystem --output-json trufflehog-output.json .
 
     - name: Upload TruffleHog Report
       continue-on-error: true 
@@ -99,7 +99,7 @@ jobs:
         path: trufflehog_report.json
 
   docker_build_push:
-    needs: [trufflehog_scan]
+    needs: [trufflehog_scan,security_scan]
     runs-on: [self-hosted]
 
     steps:
