@@ -87,6 +87,7 @@ jobs:
     - name: Run TruffleHog Scan
       run: |
         pwd
+        pip install trufflehog
         trufflehog --json . > trufflehog_report.json
 
     - name: Upload TruffleHog Report
