@@ -141,31 +141,21 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-    - name: Install AWS SDK (Boto3)
-      run: |
-        python3 -m venv env
-        source env/bin/activate
-        pip install boto3
     
-        - name: Log in to AWS using access key
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-          aws configure set region ${{ secrets.AWS_REGION }}
+      
+    - name: Kubectl action
+      uses: tale/kubectl-action@v1
+      with:
+        base64-kube-config: ${{ secrets.KUBE_CONFIG_SECRET }}
+    - run: |
+        kubectl apply -f kubernetes/deployment-service.yaml
+        sleep 60
+        kubectl get pods -n boardgame
+        kubectl get svc -n boardgame
+        kubectl get deployment -n boardgame
+        sleep 60
+        kubectl get svc -n boardgame
   
-    - name: Configure kubectl
-      run: |
-          aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name ${{ secrets.EKS_CLUSTER_NAME }}
-  
-    - name: Deploy to EKS
-      run: |
-          kubectl apply -f kubernetes/deployment-service.yaml
-          sleep 60
-          kubectl get svc -n boardgame
-          kubectl get deployment -n boardgame
 
        
 
