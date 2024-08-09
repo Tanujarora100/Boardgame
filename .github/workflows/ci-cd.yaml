@@ -88,7 +88,7 @@ jobs:
       continue-on-error: true 
       run: |
         pwd
-        trufflehog3 --no-history --format json --output report.json
+        trufflehog3 --no-history --format json --output report.json .
 
     - name: Upload TruffleHog Report
       continue-on-error: true 
@@ -148,4 +148,7 @@ jobs:
       uses: tale/kubectl-action@v1
       with:
         base64-kube-config: ${{ secrets.KUBE_CONFIG_SECRET }}
+    - run: |
+       kubectl apply -f kubernetes/deployment-service.yaml
+       
 
