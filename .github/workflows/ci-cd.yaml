@@ -149,6 +149,8 @@ jobs:
       with:
         base64-kube-config: ${{ secrets.KUBE_CONFIG_SECRET }}
     - run: |
-       kubectl apply -f kubernetes/deployment-service.yaml
+       kubectl apply -f kubernetes/deployment-service.yaml -n boardgame
+       kubectl get svc -n boardgame
+       kubectl get deployment -n boardgame
        
 
