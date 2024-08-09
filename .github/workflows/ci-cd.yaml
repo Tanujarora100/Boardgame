@@ -151,7 +151,8 @@ jobs:
         
     - name: Set up Kubeconfig
       run: |
-        echo "${{ secrets.KUBE_CONFIG_SECRET }}" > $HOME/.kube/config
+        echo "${{ secrets.KUBECONFIG_DATA }}" | base64 --decode > $HOME/.kube/config
+        sudo chmod 600 $HOME/.kube/config
 
     - name: Deploy to GKE
       run: |
